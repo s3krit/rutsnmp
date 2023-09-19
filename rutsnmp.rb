@@ -34,10 +34,10 @@ client = InfluxDB2::Client.new url, token, bucket: bucket, org: org, precision: 
 loop do
   point = InfluxDB2::Point.new(name: 'rutsnmp')
   point.add_tag('host', 'rutsnmp')
-  oids.each do |key, oid|
-    puts "#{key}: #{manager.get(oid: oid)}"
-    point.add_field(key.to_s, manager.get(oid: oid))
-  end
+  point.add_field 'mSignal', manager.get(oid: oids[:mSignal])
+  point.add_field 'mConnectionType', manager.get(oid: oids[:mConnectionType])
+  point.add_field('mSent', manager.get(oid: oids[:mSent]) & 0xFFFFFFFF)
+  point.add_field('mReceived', manager.get(oid: oids[:mReceived]) & 0xFFFFFFFF)
   puts '---------------------'
   puts point.to_line_protocol
   puts '---------------------'
