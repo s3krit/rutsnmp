@@ -13,6 +13,7 @@ GEM
       method_source (~> 1.0)
 
 PLATFORMS
+  arm-linux
   arm64-darwin-21
 
 DEPENDENCIES
