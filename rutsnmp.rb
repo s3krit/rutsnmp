@@ -19,11 +19,6 @@ manager = NETSNMP::Client.new(
   community: 'public'
 )
 
-oids.each do |key, oid|
-  out = manager.get(oid: oid)
-  puts "#{key}: #{out}"
-end
-
 token = ENV['INFLUX_TOKEN']
 org = ENV['INFLUX_ORG']
 bucket = ENV['INFLUX_BUCKET']
@@ -31,7 +26,6 @@ url = ENV['INFLUX_URL']
 
 client = InfluxDB2::Client.new url, token, bucket: bucket, org: org, precision: 'InfluxDB2::WritePrecision::NANOSECOND'
 
-loop do
   point = InfluxDB2::Point.new(name: 'rutsnmp')
   point.add_tag('host', 'rutsnmp')
   point.add_field 'mSignal', manager.get(oid: oids[:mSignal])
@@ -49,5 +43,3 @@ loop do
   rescue InfluxDB2::InfluxError => e
     puts "InfluxDB exception: #{e}"
   end
-  sleep 10
-end
